@@ -14,16 +14,12 @@ public class PiggyBank {
     private String sku;
     private String message = "We are poor and we need money. Please donate.";
     private String title = "Give us money!";
-    private String cancelText= "Maybe later.";
+    private String cancelText = "Maybe later.";
     private String donateText = "Donate %s";
     private boolean showPrice = false;
 
     private PiggyBank() {
 
-    }
-
-    public interface OnDonationListener {
-        public void onPurchased(String sku);
     }
 
     public void donate() {
@@ -104,5 +100,9 @@ public class PiggyBank {
             piggyBank.showPrice = show;
             return this;
         }
+    }
+
+    public interface OnDonationListener {
+        public void onPurchased(String sku);
     }
 }
