@@ -53,6 +53,10 @@ public class PiggyBank {
 
     }
 
+    /**
+     * Method that performs donation
+     * @param donateCallback Callback to notify activity about succeeded or failed attempt to donation
+     */
     public void donate(final DonateCallback donateCallback) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(title);
@@ -100,29 +104,51 @@ public class PiggyBank {
         builder.show();
     }
 
+    /**
+     * Method for determining whether the user has already donated
+     * @return true if user has donated, false when it has not
+     * @throws RemoteException
+     */
     public boolean isDonated() throws RemoteException {
         Bundle ownedSkus = billingService.getPurchases(3, activity.getPackageName(), "inapp", null);
         return ownedSkus.getInt("RESPONSE_CODE") == 0
                 && ownedSkus.getStringArrayList("INAPP_PURCHASE_ITEM_LIST").contains(sku);
     }
 
+    /**
+     * Must be called in activity's onActivityResult
+     * @param requestCode code of request
+     * @param resultCode code of result
+     * @param intent Intent containing data from stopped activity
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == PURCHASE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             donationListener.onPurchased(sku);
         }
     }
 
+    /**
+     * Must be called in activity's onCreate
+     */
     public void onCreate() {
         activity.bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"),
                 serviceConnection, Activity.BIND_AUTO_CREATE);
     }
 
+    /**
+     * Must be called in activity's onDestroy
+     */
     public void onDestroy() {
         if (billingService != null) {
             activity.unbindService(serviceConnection);
         }
     }
 
+    /**
+     * This method is used to obtain price
+     * @return String containing price with currency
+     * @throws RemoteException
+     */
     public String getPrice() throws RemoteException {
         String price = "0.99$";
         ArrayList<String> skus = new ArrayList<String>();
@@ -147,6 +173,9 @@ public class PiggyBank {
         return price;
     }
 
+    /**
+     * Class used for getting PiggyBank instance
+     */
     public static class Builder {
 
         private PiggyBank piggyBank = new PiggyBank();
@@ -155,70 +184,134 @@ public class PiggyBank {
             piggyBank.activity = activity;
         }
 
+        /**
+         * @return ready to use PiggyBank object
+         */
         public PiggyBank build() {
             return piggyBank;
         }
 
+        /**
+         * Sets SKU of donation
+         * @param sku String with SKU from Google Play
+         * @return current instance of this Builder
+         */
         public Builder setSKU(String sku) {
             piggyBank.sku = sku;
             return this;
         }
 
+        /**
+         * Sets listener whose method is invoked when donation is performed
+         * @param listener instance of OnDonationListener
+         * @return current instance of Builder
+         */
         public Builder setOnDonationListener(OnDonationListener listener) {
             piggyBank.donationListener = listener;
             return this;
         }
 
+        /**
+         * Sets message displayed in donating dialog
+         * @param message message to be displayed
+         * @return current instance of Builder
+         */
         public Builder setMessage(String message) {
             piggyBank.message = message;
             return this;
         }
 
+        /**
+         * Sets message displayed in donating dialog
+         * @param id id of String resource
+         * @return current instance of Builder
+         */
         public Builder setMessage(@StringRes int id) {
             piggyBank.message = piggyBank.activity.getString(id);
             return this;
         }
 
+        /**
+         * Sets the title of donating dialog
+         * @param title title to be displayed
+         * @return current instance of Builder
+         */
         public Builder setTitle(String title) {
             piggyBank.title = title;
             return this;
         }
 
+        /**
+         * Sets the title of donating dialog
+         * @param id of String resource to be displayed
+         * @return current instance of Builder
+         */
         public Builder setTitle(@StringRes int id) {
             piggyBank.title = piggyBank.activity.getString(id);
             return this;
         }
 
+        /**
+         * Sets text of Cancel button in the donating dialog
+         * @param text text to be displayed on the cancel button
+         * @return current instance of Builder
+         */
         public Builder setCancelText(String text) {
             piggyBank.cancelText = text;
             return this;
         }
 
+        /**
+         * Sets text of cancel button in the donating dialog
+         * @param id id of String resource to be displayed on the cancel button
+         * @return current instance of Builder
+         */
         public Builder setCancelText(@StringRes int id) {
             piggyBank.cancelText = piggyBank.activity.getString(id);
             return this;
         }
 
+        /**
+         * Sets text of donate button in the donating dialog
+         * @param donateText text to be displayed on the Donate button
+         * @return current instance of this Builder
+         */
         public Builder setDonateText(String donateText) {
             piggyBank.donateText = donateText;
             return this;
         }
 
+        /**
+         * Sets text of donate button in the donating dialog
+         * @param id of a String resource to be displayed on the Donate button
+         * @return current instance of this Builder
+         */
         public Builder setDonateText(@StringRes int id) {
             piggyBank.donateText = piggyBank.activity.getString(id);
             return this;
         }
 
+        /**
+         * Enables showing of price on the donate button
+         * @param show enables or disables price showing
+         * @return current instance of this Builder
+         */
         public Builder showPrice(boolean show) {
             piggyBank.showPrice = show;
             return this;
         }
     }
 
+    /**
+     * Interface that's method is used to notify activity about performed donation
+     */
     public interface OnDonationListener {
         public void onPurchased(String sku);
     }
 
+    /**
+     * CallBack interface used for notifying about errors in donating process
+     */
     public interface DonateCallback {
         public void onSuccess();
 
