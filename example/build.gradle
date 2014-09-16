@@ -11,10 +11,21 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(BRIGHTIFY_KEYSTORE)
+            storePassword BRIGHTIFY_KEYSTORE_PASSWORD
+            keyAlias BRIGHTIFY_KEY_ALIAS
+            keyPassword BRIGHTIFY_KEY_PASSWORD
+        }
+    }
+
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
