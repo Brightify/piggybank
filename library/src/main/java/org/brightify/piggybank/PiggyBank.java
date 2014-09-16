@@ -33,7 +33,7 @@ public class PiggyBank {
     private String message = "We are poor and we need money. Please donate.";
     private String title = "Give us money!";
     private String cancelText = "Maybe later.";
-    private String donateText = "Donate %s";
+    private String donateText = "Donate";
     private boolean showPrice = false;
 
     private IInAppBillingService billingService;
@@ -53,7 +53,7 @@ public class PiggyBank {
 
     }
 
-    public void donate(final DonateCallback donateCallback) throws RemoteException {
+    public void donate(final DonateCallback donateCallback) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(title);
         builder.setMessage(message);
@@ -65,10 +65,15 @@ public class PiggyBank {
         });
 
         if (showPrice) {
-            if (!donateText.contains("%s")) {
+            if (!donateText.contains(" %s")) {
                 donateText += " %s";
             }
-            donateText = String.format(donateText, getPrice());
+            try {
+                donateText = String.format(donateText, getPrice());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                donateCallback.onFailure("Failed to get price." + e.getMessage());
+            }
         }
         builder.setPositiveButton(donateText, new DialogInterface.OnClickListener() {
             @Override
@@ -76,18 +81,23 @@ public class PiggyBank {
                 try {
                     Bundle purchaseBundle = billingService.getBuyIntent(3, activity.getPackageName(), sku, "INAPP", "");
                     PendingIntent purchaseIntent = purchaseBundle.getParcelable("BUY_INTENT");
+                    if (purchaseIntent == null) {
+                        donateCallback.onFailure("You have not published the app.");
+                        return;
+                    }
                     activity.startIntentSenderForResult(purchaseIntent.getIntentSender(),
                             PURCHASE_REQUEST_CODE, new Intent(), 0, 0, 0);
                     donateCallback.onSuccess();
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                    donateCallback.onFailure();
+                    donateCallback.onFailure("Failed to purchase. " + e.getMessage());
                 } catch (IntentSender.SendIntentException e) {
                     e.printStackTrace();
-                    donateCallback.onFailure();
+                    donateCallback.onFailure("Failed to purchase. " + e.getMessage());
                 }
             }
         });
+        builder.show();
     }
 
     public boolean isDonated() throws RemoteException {
@@ -212,6 +222,6 @@ public class PiggyBank {
     public interface DonateCallback {
         public void onSuccess();
 
-        public void onFailure();
+        public void onFailure(String reason);
     }
 }

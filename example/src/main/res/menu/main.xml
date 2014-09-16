@@ -1,4 +1,11 @@
 <menu
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context=".MainActivity">
+
+    <item
+        android:title="Donate"
+        android:id="@+id/donate"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_donate"/>
 </menu>
