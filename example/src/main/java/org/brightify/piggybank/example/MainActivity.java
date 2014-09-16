@@ -20,22 +20,26 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         PiggyBank.Builder builder = new PiggyBank.Builder(this);
         builder.setSKU(SKU);
         builder.showPrice(true);
         piggyBank = builder.build();
+
         piggyBank.onCreate();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         piggyBank.onDestroy();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         piggyBank.onActivityResult(requestCode, resultCode, data);
     }
 
