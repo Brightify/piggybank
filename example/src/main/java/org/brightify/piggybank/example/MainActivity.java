@@ -26,7 +26,7 @@ public class MainActivity extends PiggyBankActivity {
         if (piggyBank == null) {
             PiggyBank.Builder builder = new PiggyBank.Builder(this);
             builder.setSKU(SKU);
-            //builder.showPrice(true);
+            builder.showPrice(true);
             piggyBank = builder.build();
         }
         return piggyBank;
