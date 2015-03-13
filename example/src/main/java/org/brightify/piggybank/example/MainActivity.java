@@ -1,6 +1,5 @@
 package org.brightify.piggybank.example;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,10 +18,6 @@ public class MainActivity extends PiggyBankActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        piggyBank = new PiggyBank.Builder(this)
-                .setSKU("piggy_donation")
-                .showPrice(true)
-                .build();
     }
 
     @Override
@@ -59,12 +54,6 @@ public class MainActivity extends PiggyBankActivity {
             });
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        piggyBank.onActivityResult(requestCode, resultCode, data);
     }
 
 }

@@ -12,9 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.annotation.StringRes;
-
 import com.android.vending.billing.IInAppBillingService;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,6 +53,7 @@ public class PiggyBank {
 
     /**
      * Method that performs donation
+     *
      * @param donateCallback Callback to notify activity about succeeded or failed attempt to donation
      */
     public void donate(final DonateCallback donateCallback) {
@@ -90,12 +89,9 @@ public class PiggyBank {
                         return;
                     }
                     activity.startIntentSenderForResult(purchaseIntent.getIntentSender(),
-                            PURCHASE_REQUEST_CODE, new Intent(), 0, 0, 0);
+                                                        PURCHASE_REQUEST_CODE, new Intent(), 0, 0, 0);
                     donateCallback.onSuccess();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                    donateCallback.onFailure("Failed to purchase. " + e.getMessage());
-                } catch (IntentSender.SendIntentException e) {
+                } catch (RemoteException | IntentSender.SendIntentException e) {
                     e.printStackTrace();
                     donateCallback.onFailure("Failed to purchase. " + e.getMessage());
                 }
@@ -106,20 +102,21 @@ public class PiggyBank {
 
     /**
      * Method for determining whether the user has already donated
+     *
      * @return true if user has donated, false when it has not
-     * @throws RemoteException
      */
     public boolean isDonated() throws RemoteException {
         Bundle ownedSkus = billingService.getPurchases(3, activity.getPackageName(), "inapp", null);
         return ownedSkus.getInt("RESPONSE_CODE") == 0
-                && ownedSkus.getStringArrayList("INAPP_PURCHASE_ITEM_LIST").contains(sku);
+               && ownedSkus.getStringArrayList("INAPP_PURCHASE_ITEM_LIST").contains(sku);
     }
 
     /**
      * Must be called in activity's onActivityResult
+     *
      * @param requestCode code of request
-     * @param resultCode code of result
-     * @param intent Intent containing data from stopped activity
+     * @param resultCode  code of result
+     * @param intent      Intent containing data from stopped activity
      */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == PURCHASE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
@@ -131,8 +128,9 @@ public class PiggyBank {
      * Must be called in activity's onCreate
      */
     public void onCreate() {
-        activity.bindService(new Intent("com.android.vending.billing.InAppBillingService.BIND"),
-                serviceConnection, Activity.BIND_AUTO_CREATE);
+        Intent intent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        intent.setPackage("com.android.vending");
+        activity.bindService(intent, serviceConnection, Activity.BIND_AUTO_CREATE);
     }
 
     /**
@@ -146,8 +144,8 @@ public class PiggyBank {
 
     /**
      * This method is used to obtain price
+     *
      * @return String containing price with currency
-     * @throws RemoteException
      */
     public String getPrice() throws RemoteException {
         String price = "0.99$";
@@ -193,7 +191,9 @@ public class PiggyBank {
 
         /**
          * Sets SKU of donation
+         *
          * @param sku String with SKU from Google Play
+         *
          * @return current instance of this Builder
          */
         public Builder setSKU(String sku) {
@@ -203,7 +203,9 @@ public class PiggyBank {
 
         /**
          * Sets listener whose method is invoked when donation is performed
+         *
          * @param listener instance of OnDonationListener
+         *
          * @return current instance of Builder
          */
         public Builder setOnDonationListener(OnDonationListener listener) {
@@ -213,7 +215,9 @@ public class PiggyBank {
 
         /**
          * Sets message displayed in donating dialog
+         *
          * @param message message to be displayed
+         *
          * @return current instance of Builder
          */
         public Builder setMessage(String message) {
@@ -223,7 +227,9 @@ public class PiggyBank {
 
         /**
          * Sets message displayed in donating dialog
+         *
          * @param id id of String resource
+         *
          * @return current instance of Builder
          */
         public Builder setMessage(@StringRes int id) {
@@ -233,7 +239,9 @@ public class PiggyBank {
 
         /**
          * Sets the title of donating dialog
+         *
          * @param title title to be displayed
+         *
          * @return current instance of Builder
          */
         public Builder setTitle(String title) {
@@ -243,7 +251,9 @@ public class PiggyBank {
 
         /**
          * Sets the title of donating dialog
+         *
          * @param id of String resource to be displayed
+         *
          * @return current instance of Builder
          */
         public Builder setTitle(@StringRes int id) {
@@ -253,7 +263,9 @@ public class PiggyBank {
 
         /**
          * Sets text of Cancel button in the donating dialog
+         *
          * @param text text to be displayed on the cancel button
+         *
          * @return current instance of Builder
          */
         public Builder setCancelText(String text) {
@@ -263,7 +275,9 @@ public class PiggyBank {
 
         /**
          * Sets text of cancel button in the donating dialog
+         *
          * @param id id of String resource to be displayed on the cancel button
+         *
          * @return current instance of Builder
          */
         public Builder setCancelText(@StringRes int id) {
@@ -273,7 +287,9 @@ public class PiggyBank {
 
         /**
          * Sets text of donate button in the donating dialog
+         *
          * @param donateText text to be displayed on the Donate button
+         *
          * @return current instance of this Builder
          */
         public Builder setDonateText(String donateText) {
@@ -283,7 +299,9 @@ public class PiggyBank {
 
         /**
          * Sets text of donate button in the donating dialog
+         *
          * @param id of a String resource to be displayed on the Donate button
+         *
          * @return current instance of this Builder
          */
         public Builder setDonateText(@StringRes int id) {
@@ -293,7 +311,9 @@ public class PiggyBank {
 
         /**
          * Enables showing of price on the donate button
+         *
          * @param show enables or disables price showing
+         *
          * @return current instance of this Builder
          */
         public Builder showPrice(boolean show) {

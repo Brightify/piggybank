@@ -7,5 +7,5 @@
         android:title="Donate"
         android:id="@+id/donate"
         android:showAsAction="always"
-        android:icon="@drawable/ic_action_donate"/>
+        android:icon="@drawable/ic_action_pig_holo_dark"/>
 </menu>
