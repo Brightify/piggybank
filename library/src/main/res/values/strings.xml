@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PiggyBank</string>
+    <string name="cancelButtonText">Maybe later</string>
+    <string name="dialogTitle">Donate</string>
+    <string name="dialogMessage">We are poor and we need money. Please donate.</string>
+    <string name="dialogDonateButtonText">Donate</string>
 </resources>

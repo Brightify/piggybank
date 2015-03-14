@@ -28,10 +28,10 @@ public class PiggyBank {
     private Activity activity;
     private OnDonationListener donationListener;
     private String sku;
-    private String message = "We are poor and we need money. Please donate.";
-    private String title = "Give us money!";
-    private String cancelText = "Maybe later.";
-    private String donateText = "Donate";
+    private String message;
+    private String title;
+    private String cancelText;
+    private String donateText;
     private boolean showPrice = false;
 
     private IInAppBillingService billingService;
@@ -180,6 +180,10 @@ public class PiggyBank {
 
         public Builder(Activity activity) {
             piggyBank.activity = activity;
+            piggyBank.message = activity.getString(R.string.dialogMessage);
+            piggyBank.title = activity.getString(R.string.dialogTitle);
+            piggyBank.cancelText = activity.getString(R.string.cancelButtonText);
+            piggyBank.donateText = activity.getString(R.string.dialogDonateButtonText);
         }
 
         /**
