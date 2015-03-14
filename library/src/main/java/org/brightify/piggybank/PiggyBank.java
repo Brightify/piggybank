@@ -67,18 +67,19 @@ public class PiggyBank {
             }
         });
 
+        String positiveText = donateText;
         if (showPrice) {
-            if (!donateText.contains(" %s")) {
-                donateText += " %s";
+            if (!positiveText.contains(" %s")) {
+                positiveText += " %s";
             }
             try {
-                donateText = String.format(donateText, getPrice());
+                positiveText = String.format(positiveText, getPrice());
             } catch (RemoteException e) {
                 e.printStackTrace();
                 donateCallback.onFailure("Failed to get price." + e.getMessage());
             }
         }
-        builder.setPositiveButton(donateText, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(positiveText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 try {
