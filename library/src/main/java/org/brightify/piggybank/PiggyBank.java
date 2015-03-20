@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -33,6 +34,23 @@ public class PiggyBank {
     private String cancelText;
     private String donateText;
     private boolean showPrice = false;
+
+    // this is enabled by default to allow multiple donations
+    private boolean consumePurchase = true;
+
+    private AsyncTask<String, Void, Void> consumeAsyncTask =  new AsyncTask<String, Void, Void>() {
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                JSONObject purchaseJson = new JSONObject(params[0]);
+                String purchaseToken = purchaseJson.getString("purchaseToken");
+                billingService.consumePurchase(3, activity.getPackageName(), purchaseToken);
+            } catch (JSONException | RemoteException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    };
 
     private IInAppBillingService billingService;
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -122,6 +140,13 @@ public class PiggyBank {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == PURCHASE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             donationListener.onPurchased(sku);
+            consume(intent);
+        }
+    }
+
+    private void consume(Intent intent) {
+        if(consumePurchase && intent.hasExtra("INAPP_PURCHASE_DATA")) {
+            consumeAsyncTask.execute(intent.getStringExtra("INAPP_PURCHASE_DATA"));
         }
     }
 
@@ -323,6 +348,17 @@ public class PiggyBank {
          */
         public Builder showPrice(boolean show) {
             piggyBank.showPrice = show;
+            return this;
+        }
+
+        /**
+         * Enables or disables purchase consuming
+         * This is set to true by default to allow multiple donations by one person
+         * @param consumePurchase
+         * @return current instance of thi Builder
+         */
+        public Builder setConsumePurchase(boolean consumePurchase) {
+            piggyBank.consumePurchase = consumePurchase;
             return this;
         }
     }
