@@ -83,7 +83,7 @@ public class PiggyBank {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 try {
-                    Bundle purchaseBundle = billingService.getBuyIntent(3, activity.getPackageName(), sku, "INAPP", "");
+                    Bundle purchaseBundle = billingService.getBuyIntent(3, activity.getPackageName(), sku, "inapp", "");
                     PendingIntent purchaseIntent = purchaseBundle.getParcelable("BUY_INTENT");
                     if (purchaseIntent == null) {
                         donateCallback.onFailure("You have not published the app.");
