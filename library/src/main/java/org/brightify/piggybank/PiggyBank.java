@@ -139,7 +139,9 @@ public class PiggyBank {
      */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == PURCHASE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            donationListener.onPurchased(sku);
+            if (donationListener != null) {
+                donationListener.onPurchased(sku);
+            }
             consume(intent);
         }
     }
