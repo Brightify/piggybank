@@ -38,20 +38,6 @@ public class PiggyBank {
     // this is enabled by default to allow multiple donations
     private boolean consumePurchase = true;
 
-    private AsyncTask<String, Void, Void> consumeAsyncTask =  new AsyncTask<String, Void, Void>() {
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-                JSONObject purchaseJson = new JSONObject(params[0]);
-                String purchaseToken = purchaseJson.getString("purchaseToken");
-                billingService.consumePurchase(3, activity.getPackageName(), purchaseToken);
-            } catch (JSONException | RemoteException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    };
-
     private IInAppBillingService billingService;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -148,6 +134,7 @@ public class PiggyBank {
 
     private void consume(Intent intent) {
         if(consumePurchase && intent.hasExtra("INAPP_PURCHASE_DATA")) {
+            ConsumeAsyncTask consumeAsyncTask = new ConsumeAsyncTask();
             consumeAsyncTask.execute(intent.getStringExtra("INAPP_PURCHASE_DATA"));
         }
     }
@@ -197,6 +184,21 @@ public class PiggyBank {
             e.printStackTrace();
         }
         return price;
+    }
+
+    private class ConsumeAsyncTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+                JSONObject purchaseJson = new JSONObject(params[0]);
+                String purchaseToken = purchaseJson.getString("purchaseToken");
+                billingService.consumePurchase(3, activity.getPackageName(), purchaseToken);
+            } catch (JSONException | RemoteException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     /**
