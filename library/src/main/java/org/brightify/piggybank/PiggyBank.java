@@ -371,15 +371,15 @@ public class PiggyBank {
      * Interface that's method is used to notify activity about performed donation
      */
     public interface OnDonationListener {
-        public void onPurchased(String sku);
+        void onPurchased(String sku);
     }
 
     /**
      * CallBack interface used for notifying about errors in donating process
      */
     public interface DonateCallback {
-        public void onSuccess();
+        void onSuccess();
 
-        public void onFailure(String reason);
+        void onFailure(String reason);
     }
 }

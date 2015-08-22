@@ -2,12 +2,12 @@ package org.brightify.piggybank;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * @author <a href="mailto:hyblmatous@gmail.com">Matous Hybl</a>
  */
-public abstract class PiggyBankActionBarActivity extends ActionBarActivity {
+public abstract class PiggyBankActionBarActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
