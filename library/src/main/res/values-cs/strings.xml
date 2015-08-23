@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PiggyBank</string>
-    <string name="cancelButtonText">Možná později</string>
-    <string name="dialogDonateButtonText">Podpořit</string>
-    <string name="dialogMessage">Jsme chudí a potřebujeme peníze. Podpořte nás prosím.</string>
-    <string name="dialogTitle">Podpořit</string>
+    <string name="piggy_app_name">PiggyBank</string>
+    <string name="piggy_cancelButtonText">Možná později</string>
+    <string name="piggy_dialogDonateButtonText">Podpořit</string>
+    <string name="piggy_dialogMessage">Jsme chudí a potřebujeme peníze. Podpořte nás prosím.</string>
+    <string name="piggy_dialogTitle">Podpořit</string>
 </resources>

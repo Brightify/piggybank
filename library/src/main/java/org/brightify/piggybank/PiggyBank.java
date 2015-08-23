@@ -210,10 +210,10 @@ public class PiggyBank {
 
         public Builder(Activity activity) {
             piggyBank.activity = activity;
-            piggyBank.message = activity.getString(R.string.dialogMessage);
-            piggyBank.title = activity.getString(R.string.dialogTitle);
-            piggyBank.cancelText = activity.getString(R.string.cancelButtonText);
-            piggyBank.donateText = activity.getString(R.string.dialogDonateButtonText);
+            piggyBank.message = activity.getString(R.string.piggy_dialogMessage);
+            piggyBank.title = activity.getString(R.string.piggy_dialogTitle);
+            piggyBank.cancelText = activity.getString(R.string.piggy_cancelButtonText);
+            piggyBank.donateText = activity.getString(R.string.piggy_dialogDonateButtonText);
         }
 
         /**
